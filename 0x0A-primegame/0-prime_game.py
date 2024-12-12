@@ -1,39 +1,44 @@
 #!/usr/bin/python3
-"""Module for Prime Game"""
+"""
+Define isWineer function, a solution to the Prime Game problem
+"""
+
+
+def primes(n):
+    """Return list of prime numbers between 1 and n inclusive
+       Args:
+        n (int): upper boundary of range. lower boundary is always 1
+    """
+    prime = []
+    sieve = [True] * (n + 1)
+    for p in range(2, n + 1):
+        if (sieve[p]):
+            prime.append(p)
+            for i in range(p, n + 1, p):
+                sieve[i] = False
+    return prime
 
 
 def isWinner(x, nums):
     """
-    Determines the winner of a set of prime number removal games.
-
+    Determines winner of Prime Game
     Args:
-        x (int): The number of rounds.
-        nums (list of int): A list of integers where each integer n denotes
-        a set of consecutive integers starting from 1 up to and including n.
-
-    Returns:
-        str: The name of the player who won the most rounds (either "Ben"
-        or "Maria").
-        None: If the winner cannot be determined.
-
-    Raises:
-        None.
+        x (int): no. of rounds of game
+        nums (int): upper limit of range for each round
+    Return:
+        Name of winner (Maria or Ben) or None if winner cannot be found
     """
-    # Check for invalid input
-    if x <= 0 or nums is None:
+    if x is None or nums is None or x == 0 or nums == []:
         return None
-    if x != len(nums):
-        return None
-    # Initialize scores and array of possible prime numbers
-    ben = 0
-    maria = 0
-    # Create a list 'a' of length sorted(nums)[-1] + 1 with all elements
-    # initialized to 1
-    a = [1 for x in range(sorted(nums)[-1] + 1)]
-    # The first two elements of the list, a[0] and a[1], are set to 0
-    # because 0 and 1 are not prime numbers
-    a[0], a[1] = 0, 0
-    # Use Sieve of Eratosthenes algorithm to generate array of prime numbers
-    for i in range(2, len(a)):
-        rm_multiples(a, i)
-
+    Maria = Ben = 0
+    for i in range(x):
+        prime = primes(nums[i])
+        if len(prime) % 2 == 0:
+            Ben += 1
+        else:
+            Maria += 1
+    if Maria > Ben:
+        return 'Maria'
+    elif Ben > Maria:
+        return 'Ben'
+    return None
